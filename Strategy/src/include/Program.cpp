@@ -7,6 +7,22 @@
 
 using namespace std;
 
+void GeneratePromoteStrategy(Ticket ticket, NoDiscountStrategy noDiscount, HalfDiscountStrategy halfDiscount)
+{
+    int strategyIndex = rand() % 2; //[0,1]
+    switch (strategyIndex)
+    {
+    case 0:
+        ticket.SetPromoteStrategy(&noDiscount);
+        break;
+    case 1:
+        ticket.SetPromoteStrategy(&halfDiscount);
+    default:
+        break;
+    }
+    cout << "Promoted price of " + ticket.GetName() + " is " + to_string(ticket.GetPromotedPrice()) + " strategyIndex " + to_string(strategyIndex) <<endl;
+}
+
 int main()
 {
     srand(time(NULL));
@@ -15,21 +31,13 @@ int main()
     HalfDiscountStrategy halfDiscount;
     for (int i = 1; i  <= 5; i++)
     {
-        int strategyIndex = rand() % 2; //[0,1]
         Ticket ticket;
         ticket.SetName("Ticket" + to_string(i));
         ticket.SetPrice(50.0 * i);
-        switch (strategyIndex)
-        {
-        case 0:
-            ticket.SetPromoteStrategy(&noDiscount);
-            break;
-        case 1:
-            ticket.SetPromoteStrategy(&halfDiscount);
-        default:
-            break;
-        }
-        cout << "Promoted price of " + ticket.GetName() + " is " + to_string(ticket.GetPromotedPrice()) + " strategyIndex " + to_string(strategyIndex) <<endl;
+
+        GeneratePromoteStrategy(ticket, noDiscount, halfDiscount);
+    
+        GeneratePromoteStrategy(ticket, noDiscount, halfDiscount);
     }
     return 0;
 }
