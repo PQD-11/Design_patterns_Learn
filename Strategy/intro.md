@@ -1,31 +1,3 @@
-        |   Ticket                                                      |
-        -----------------------------------------------------------------
-        | _price: double                                                |
-        | _promoteStrategy: PromoteStrategy                             |
-        | _name: string                                                 |
-        -----------------------------------------------------------------
-        | GetPromoteStrategy(): PromoteStrategy                         |
-        | SetPromoteStrategy(promoteStrategy: PromoteStrategy): void    |
-        | GetPromotedPrice(): double                                    |
-        | GetPrice(): double                                            |
-        | SetPrice(price: double): void                                 |
-        | GetName(): string                                             |
-        | SetName(name: string): void                                   |
-        -----------------------------------------------------------------
-                                        ||           
-                                        vv            
-
-                    |   PromoteStrategy                 |  
-                    -------------------------------------
-                    | DoDiscount(price: double): double |   
-                    -------------------------------------
-                                        ||
-                                        vv       
-|       NoDiscountStrategy          |       |       HalfDiscountStrategy        |
--------------------------------------       -------------------------------------
-| DoDiscount(price: double): double |       | DoDiscount(price: double): double |
-
-
 Thuận tiện cho việc thay đổi các loai Discount, chỉ cần thay đổi loại discount.
 class PromoteStrategy trong C# được gọi interface
 

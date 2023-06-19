@@ -2,14 +2,13 @@
 #define HALFDISCOUNTSTRATEGY_H
 
 #pragma once
-#include "IPromoteStrategy.h"
 
-class HalfDiscountStrategy : public IPromoteStrategy
+class HalfDiscountStrategy : public DiscountStratery
 {
 public:
-    double DoDiscount(double price) override;
-private:
-
+    double processDiscount(double price) override{
+        return price * 0.5;
+    }
 };
 
 #endif

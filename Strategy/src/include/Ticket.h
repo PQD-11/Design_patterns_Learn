@@ -2,24 +2,41 @@
 #define TICKET_H
 
 #pragma once
-#include <string>
-#include "IPromoteStrategy.h"
+// #include <string>
+#include "DiscountStratery.h"
 
 class Ticket
 {
 public:
-    Ticket();
-    Ticket(IPromoteStrategy* promoteStrategy);
-    ~Ticket();
-    IPromoteStrategy* GetPromoteStrategy();
-    void SetPromoteStrategy(IPromoteStrategy* promoteStrategy);
-    double GetPrice();
-    void SetPrice(double value);
-    std::string GetName();
-    void SetName(std::string value);
-    double GetPromotedPrice();
+    Ticket() {}
+    Ticket(DiscountStratery* discountStrategy){
+        _discountStrategy = discountStrategy;
+    }
+    ~Ticket() {}
+
+    DiscountStratery* GetDiscountStrategy(){
+        return _discountStrategy;
+    }
+    void SetDiscountStrategy(DiscountStratery* discountStrategy){
+        _discountStrategy = discountStrategy;
+    }
+    double GetPrice(){
+        return _price;
+    }
+    void SetPrice(double value){
+        _price = value;
+    }
+    std::string GetName(){
+        return _name;
+    }
+    void SetName(std::string value){
+        _name = value;
+    }
+    double DoDiscount(){
+        return _discountStrategy->processDiscount(_price);
+    }
 private:
-    IPromoteStrategy* _promoteStrategy;
+    DiscountStratery* _discountStrategy;
     double _price;
     std::string _name;
 };

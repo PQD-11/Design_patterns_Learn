@@ -1,43 +1,36 @@
-#include<iostream>
-#include<time.h>
+#include <iostream>
+#include <time.h>
+#include <string>
 #include "Ticket.h"
-#include "IPromoteStrategy.h"
+#include "DiscountStratery.h"
 #include "HalfDiscountStrategy.h"
 #include "NoDiscountStrategy.h"
+#include "QuarterDiscountStrategy.h"
 
 using namespace std;
 
-void GeneratePromoteStrategy(Ticket ticket, NoDiscountStrategy noDiscount, HalfDiscountStrategy halfDiscount)
-{
-    int strategyIndex = rand() % 2; //[0,1]
-    switch (strategyIndex)
-    {
-    case 0:
-        ticket.SetPromoteStrategy(&noDiscount);
-        break;
-    case 1:
-        ticket.SetPromoteStrategy(&halfDiscount);
-    default:
-        break;
-    }
-    cout << "Promoted price of " + ticket.GetName() + " is " + to_string(ticket.GetPromotedPrice()) + " strategyIndex " + to_string(strategyIndex) <<endl;
-}
-
 int main()
 {
-    srand(time(NULL));
-    cout <<"Start getting tickets!"<<endl;
-    NoDiscountStrategy noDiscount;
-    HalfDiscountStrategy halfDiscount;
-    for (int i = 1; i  <= 5; i++)
-    {
-        Ticket ticket;
-        ticket.SetName("Ticket" + to_string(i));
-        ticket.SetPrice(50.0 * i);
+    Ticket ticketA;
+    ticketA.SetName("TicketA");
+    ticketA.SetPrice(100.000);
+    ticketA.SetDiscountStrategy(new NoDiscountStrategy());
+    cout << "The price of " + ticketA.GetName() + " is " + to_string(ticketA.DoDiscount()) + " with NoDiscount" <<endl;
+    ticketA.SetDiscountStrategy(new HalfDiscountStrategy());
+    cout << "The price of " + ticketA.GetName() + " is " + to_string(ticketA.DoDiscount()) + " with HalfDiscount" <<endl;
+    ticketA.SetDiscountStrategy(new QuarterDiscountStrategy());
+    cout << "The price of " + ticketA.GetName() + " is " + to_string(ticketA.DoDiscount()) + " with QuarterDiscount" <<endl;
 
-        GeneratePromoteStrategy(ticket, noDiscount, halfDiscount);
-    
-        GeneratePromoteStrategy(ticket, noDiscount, halfDiscount);
-    }
+    cout << "\n------------------------------------------------------- \n";
+
+    Ticket ticketB;
+    ticketB.SetName("TicketB");
+    ticketB.SetPrice(20.000);
+    ticketB.SetDiscountStrategy(new NoDiscountStrategy());
+    cout << "The price of " + ticketB.GetName() + " is " + to_string(ticketB.DoDiscount()) + " with NoDiscount" <<endl;
+    ticketB.SetDiscountStrategy(new HalfDiscountStrategy());
+    cout << "The price of " + ticketB.GetName() + " is " + to_string(ticketB.DoDiscount()) + " with HalfDiscount" <<endl;
+    ticketB.SetDiscountStrategy(new QuarterDiscountStrategy());
+    cout << "The price of " + ticketB.GetName() + " is " + to_string(ticketB.DoDiscount()) + " with QuarterDiscount" <<endl;
     return 0;
 }
