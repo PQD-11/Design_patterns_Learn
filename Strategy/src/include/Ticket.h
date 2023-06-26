@@ -2,22 +2,21 @@
 #define TICKET_H
 
 #pragma once
-// #include <string>
-#include "DiscountStratery.h"
+#include "DiscountStrategy.h"
 
 class Ticket
 {
 public:
     Ticket() {}
-    Ticket(DiscountStratery* discountStrategy){
+    Ticket(DiscountStrategy* discountStrategy){
         _discountStrategy = discountStrategy;
     }
     ~Ticket() {}
 
-    DiscountStratery* GetDiscountStrategy(){
+    DiscountStrategy* GetDiscountStrategy(){
         return _discountStrategy;
     }
-    void SetDiscountStrategy(DiscountStratery* discountStrategy){
+    void SetDiscountStrategy(DiscountStrategy* discountStrategy){
         _discountStrategy = discountStrategy;
     }
     double GetPrice(){
@@ -32,11 +31,11 @@ public:
     void SetName(std::string value){
         _name = value;
     }
-    double DoDiscount(){
+    double processDiscount(){
         return _discountStrategy->processDiscount(_price);
     }
 private:
-    DiscountStratery* _discountStrategy;
+    DiscountStrategy* _discountStrategy;
     double _price;
     std::string _name;
 };

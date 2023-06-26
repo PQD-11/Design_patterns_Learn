@@ -3,7 +3,7 @@
 
 #pragma once
 
-class DiscountStratery
+class DiscountStrategy
 {
 public:
     virtual double processDiscount(double price) = 0;

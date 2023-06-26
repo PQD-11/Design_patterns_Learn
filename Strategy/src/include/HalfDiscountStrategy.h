@@ -3,7 +3,7 @@
 
 #pragma once
 
-class HalfDiscountStrategy : public DiscountStratery
+class HalfDiscountStrategy : public DiscountStrategy
 {
 public:
     double processDiscount(double price) override{
