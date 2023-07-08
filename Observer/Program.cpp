@@ -9,6 +9,8 @@ class Observer {
 };
 
 class Subject {
+    private:
+        std::list<Observer *> observers;
     public:
         void RegisterObserver(Observer* observer) {
             observers.push_back(observer);
@@ -19,96 +21,70 @@ class Subject {
         void NotifyObservers(){                        
             for (auto observer: observers) observer->notify();
         }
-
-    private:
-        std::list<Observer *> observers;
 };
 
-class VideoData : public Subject
-{
-    public:
-        std::string GetTitle()
-        {
-            return _title;
-        }
-
-        void SetTitle(std::string value)
-        {
-            _title = value;
-            VideoDataChanged();
-        }
-
-        std::string GetDescription()
-        {
-            return _description;
-        }
-
-        void SetDescription(std::string value)
-        {
-            _description = value;
-            VideoDataChanged();
-        }
-
-        std::string GetFileName()
-        {
-            return _fileName;
-        }
-
-        void SetFileName(std::string value)
-        {
-            _fileName = value;
-            VideoDataChanged();
-        }
+class Sensor : public Subject{
     private:
-        std::string _title;
-        std::string _fileName;
-        std::string _description;
-        void VideoDataChanged()
+        bool _rainState;
+    public:
+        bool GetRainState()
         {
+            return _rainState;
+        }
+
+        void SetRainState(bool value)
+        {
+            _rainState = value;
             NotifyObservers();
         }
 };
 
 class EmailNotifier : public Observer {
+    private: 
+        Subject* _subject;  
     public:
         EmailNotifier(Subject* subject) : _subject(subject) {
             _subject->RegisterObserver(this);
         }
         void notify() override {
-            VideoData* videodate = static_cast<VideoData*>(_subject);
-            std::cout<<"Notify all subscribers via EMAIL with new data \n\t Name: " + videodate->GetFileName()<<std::endl;
-        }
-    private: 
-        Subject* _subject;                                    // (3)
+            Sensor* sensor = static_cast<Sensor*>(_subject);
+            if (sensor->GetRainState()){
+                std::cout<<"\t=> Thông báo cho tất cả người đăng ký qua EMAIL sắp có mưa" <<std::endl;
+            }
+        }                              
 };
 
-class FacebookNotifier : public Observer {
+class SMSNotifier : public Observer {
+    private: 
+        Subject* _subject; 
     public:
-        FacebookNotifier(Subject* subject) : _subject(subject) {
+        SMSNotifier(Subject* subject) : _subject(subject) {
             _subject->RegisterObserver(this);
         }
         void notify() override {
-            VideoData* videodate = static_cast<VideoData*>(_subject);
-            std::cout<<"Notify all subscribers via Facebook with new data \n\t Name: " + videodate->GetFileName()<<std::endl;
-        }
-    private: 
-        Subject* _subject;                                       // (4)
+            Sensor* sensor = static_cast<Sensor*>(_subject);
+            if (sensor->GetRainState()){
+                std::cout<<"\t=> Thông báo cho tất cả người đăng ký qua SMS sắp có mưa" <<std::endl;
+            }
+        }                                    
 };
 
 
 int main() {
 
+    Sensor sensor;   
+    EmailNotifier emailNotifier(&sensor);
+    SMSNotifier smsNotifier(&sensor);
+    std::cout <<"+ 1: Giả định tín hiệu mưa từ sensor"<<std::endl;
+    sensor.SetRainState(true);
     std::cout << '\n';
 
-    VideoData videoData;   
-    EmailNotifier emailNotifier(&videoData);
-    FacebookNotifier facebookNotifier(&videoData);
-    std::cout <<"=>Setup Name Video"<<std::endl;
-    videoData.SetFileName("Initial Name");
-
-    videoData.UnregisterObserver(&emailNotifier);
-
-    std::cout <<"\n=>Rename Video"<<std::endl;
-    videoData.SetFileName("Yepp");
+    std::cout <<"+ 2: Giả định tính hiệu không có mưa từ sensor"<<std::endl;
+    sensor.SetRainState(false);
     std::cout << '\n';
+
+    std::cout <<"* UnregisterObserver: Email"<<std::endl;
+    sensor.UnregisterObserver(&emailNotifier);
+    std::cout <<"+ 3: Giả định tín hiệu mưa từ sensor"<<std::endl;
+    sensor.SetRainState(true);
 }
