@@ -1,56 +1,78 @@
 #include <iostream>
 
-class IMilkTea{
+class Beverage{
 public:
+    virtual std::string getDescription() = 0;
     virtual double Cost() = 0;
 };
 
-class MilkTea : public IMilkTea{
+class MilkTea : public Beverage{
 public:
+    std::string getDescription() override{
+        return "MilkTea"; 
+    }
     double Cost() override{
-        return 5.0;
+        return 15000;
     }
 };
 
-class MilkTeaDecorator : public IMilkTea{
+class MilkTeaDecorator : public Beverage{
 public:
-    MilkTeaDecorator(IMilkTea *inner) : _milkTea(inner){
-    }
+    MilkTeaDecorator(Beverage *beverage) : _beverage(beverage) {}
     double Cost() override{
-        return _milkTea->Cost();
+        return _beverage->Cost();
+    }
+    std::string getDescription() override{
+        return _beverage->getDescription();
     }
 protected:
-    IMilkTea *_milkTea;
+    Beverage *_beverage;
 };
 
 class Pearl : public MilkTeaDecorator{
 public: 
-    Pearl(IMilkTea *inner) : MilkTeaDecorator(inner){ 
+    Pearl(Beverage *beverage) : MilkTeaDecorator(beverage){ 
+    }
+    std::string getDescription() override{
+        return _beverage->getDescription() + " + Pearl";
     }
     double Cost() override {
-        return 1.0 + MilkTeaDecorator::Cost();
+        return 5000 + _beverage->Cost();
     }
 };
 
 class EggPudding : public MilkTeaDecorator{
 public: 
-    EggPudding(IMilkTea *inner) : MilkTeaDecorator(inner){ 
+    EggPudding(Beverage *beverage) : MilkTeaDecorator(beverage){ 
+    }
+    std::string getDescription() override{
+        return _beverage->getDescription() + " + EggPudding";
     }
     double Cost() override {
-        return 1.5 + MilkTeaDecorator::Cost();
+        return 7000 + _beverage->Cost();
     }
 };
 
 class FruitPudding : public MilkTeaDecorator{
 public: 
-    FruitPudding(IMilkTea *inner) : MilkTeaDecorator(inner){ 
+    FruitPudding(Beverage *beverage) : MilkTeaDecorator(beverage){ 
+    }
+    std::string getDescription() override{
+        return _beverage->getDescription() + " + FruitPudding";
     }
     double Cost() override {
-        return 2.0 + MilkTeaDecorator::Cost();
+        return 10000 + _beverage->Cost();
     }
 };
 
 int main(){
-    IMilkTea *ourMilkTea = new EggPudding(new Pearl(new FruitPudding(new MilkTea)));
-    std::cout << ourMilkTea->Cost();
+    Beverage *milkTea_1 = new EggPudding(new Pearl(new FruitPudding(new MilkTea)));
+    std::cout << "Order 1:" << std:: endl;
+    std::cout << "\tDescription: "  << milkTea_1->getDescription() << std::endl;
+    std::cout << "\tCost: "  <<milkTea_1->Cost() << std::endl;
+
+    Beverage *milkTea_2 = new EggPudding(new Pearl(new MilkTea));
+    std::cout << "Order 2:" << std:: endl;
+    std::cout << "\tDescription: "  << milkTea_2->getDescription() << std::endl;
+    std::cout << "\tCost: "  <<milkTea_2->Cost() << std::endl;
 }
