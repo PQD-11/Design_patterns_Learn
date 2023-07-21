@@ -65,13 +65,25 @@ public:
     }
 };
 
+class Cheese : public MilkTeaDecorator{
+public: 
+    Cheese(Beverage *beverage) : MilkTeaDecorator(beverage){ 
+    }
+    std::string getDescription() override{
+        return _beverage->getDescription() + " + Cheese";
+    }
+    double Cost() override {
+        return 15000 + _beverage->Cost();
+    }
+};
+
 int main(){
     Beverage *milkTea_1 = new EggPudding(new Pearl(new FruitPudding(new MilkTea)));
     std::cout << "Order 1:" << std:: endl;
     std::cout << "\tDescription: "  << milkTea_1->getDescription() << std::endl;
     std::cout << "\tCost: "  <<milkTea_1->Cost() << std::endl;
 
-    Beverage *milkTea_2 = new EggPudding(new Pearl(new MilkTea));
+    Beverage *milkTea_2 = new EggPudding(new Pearl(new Cheese(new MilkTea)));
     std::cout << "Order 2:" << std:: endl;
     std::cout << "\tDescription: "  << milkTea_2->getDescription() << std::endl;
     std::cout << "\tCost: "  <<milkTea_2->Cost() << std::endl;
